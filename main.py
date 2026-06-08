@@ -16,7 +16,10 @@ def main():
     maze = Maze(25, 25)
     maze.generate_random_maze()
 
+    algo_running = False
+    generator = None
     running = True
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -24,16 +27,28 @@ def main():
                 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
+                    algo_running = False
+                    generator = None
                     maze.reset_data()
                     maze.generate_random_maze()
                 
-                # elif event.key == pygame.K_SPACE:
+                elif event.key == pygame.K_SPACE:
+                    generator = maze.evaluate_cell()
+                    algo_running = True
+            
+        if algo_running and generator is not None:
+            try:
+                finished = next(generator)
+                if finished:
+                    algo_running = False
+            except StopIteration:
+                algo_running = False
 
         screen.fill((50, 50, 50))
         draw_maze(screen, maze)
         
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(15)
 
     pygame.quit()
     sys.exit()
