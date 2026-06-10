@@ -17,6 +17,7 @@ def main():
     maze.generate_random_maze()
 
     algo_running = False
+    is_finished = False
     generator = None
     running = True
 
@@ -45,7 +46,7 @@ def main():
                 algo_running = False
 
         screen.fill((50, 50, 50))
-        draw_maze(screen, maze)
+        draw_maze(screen, maze, algo_running)
         
         pygame.display.flip()
         clock.tick(15)

@@ -106,7 +106,6 @@ class Maze():
 
     def evaluate_cell(self):
         self.start_cell.g = 0
-        self.start_cell.h = heuristic(self.start_cell, self.finish_cell)
         self.start_cell.f = self.start_cell.g + self.start_cell.h
 
         open_set = []
@@ -134,20 +133,17 @@ class Maze():
             neighbors = self.get_neighbors(current)
             
             for neighbor in neighbors:
-                if neighbor.is_closed:
-                    continue
+                if not neighbor.is_closed:        
+                    tentative_g = current.g + 1
                     
-                tentative_g = current.g + 1
-                
-                if neighbor.g == 0 or tentative_g < neighbor.g:
-                    neighbor.parent = current
-                    neighbor.g = tentative_g
-                    neighbor.h = heuristic(neighbor, self.finish_cell)
-                    neighbor.f = neighbor.g + neighbor.h
-                    
-                    if not neighbor.is_opened:
-                        heapq.heappush(open_set, neighbor)
-                        neighbor.is_opened = True
+                    if neighbor.g == 0:
+                        neighbor.parent = current
+                        neighbor.g = tentative_g
+                        neighbor.f = neighbor.g + neighbor.h
+                        
+                        if not neighbor.is_opened:
+                            heapq.heappush(open_set, neighbor)
+                            neighbor.is_opened = True
                         
             yield False 
             
